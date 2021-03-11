@@ -1,24 +1,31 @@
 from sys import exit
 import hashlib
+from cryptography.fernet import Fernet
 
 class encryption(object):
 
     def __init__(self, text_to_encrypt):
         self.text_to_encrypt = text_to_encrypt
 
+key2 = Fernet.generate_key()
 
-verification = input("What is the masterpassword?\n> ")
+print(key2)
 
-verification_d = verification.encode()
+def fernet_string_encoding(string_to_encrypt):
+    key = input("Pls insert your encryption key.\n>")
+    f = Fernet(key)
+    string_to_encrypt_b = string_to_encrypt.encode()
+    token = f.encrypt(string_to_encrypt_b)
+    print(token)
+    return token
 
-# need to hash the verification process
-secure = hashlib.sha256()
-secure.update(verification_d)
-secure2 = secure.hexdigest()
+def fernet_string_decoding(string_to_decrypt):
+    key = input("Pls insert your encryption key.\n>")
+    f = Fernet(key)
+    decrypted_string = f.decrypt(string_to_decrypt)
+    print(decrypted_string)
+    return decrypted_string
+    
 
-
-with open("masterpw.txt") as v:
-    master = v.read()
-    print(master)
-
-master.decode()
+well = fernet_string_encoding("ME")
+fernet_string_decoding(well)
