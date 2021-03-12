@@ -15,7 +15,7 @@ def new_dict():
         file.write(json.dumps(text_file_dictionary))
 
 def erase_file_new_content(file_to_change, new_content):
-    with open(file_to_change, "w") as file_to_c:
+    with open(file_to_change, 'w') as file_to_c:
         file_to_c.write(new_content)
 
 def string_to_hash_func(string_to_hash):
@@ -27,7 +27,7 @@ def string_to_hash_func(string_to_hash):
 
     return hashed_string
 
-def fernet_string_encoding(string_to_encrypt, key):
+def fernet_string_encrypting(string_to_encrypt, fernet_key):
 
     f = Fernet(fernet_key)
     string_to_encrypt_b = string_to_encrypt.encode()
@@ -35,12 +35,31 @@ def fernet_string_encoding(string_to_encrypt, key):
 
     return token
 
-def fernet_string_decoding(string_to_decrypt, key):
+def fernet_string_decrypting(string_to_decrypt, fernet_key):
 
     f = Fernet(fernet_key)
-    decrypted_string = f.decrypt(string_to_decrypt)
+    string_to_decrypt_b = string_to_decrypt.encode()
+    decrypted_string = f.decrypt(string_to_decrypt_b)
 
     return decrypted_string
+
+def password_to_decrypt(input_user):
+    password_to_decrypt_decrypted = fernet_string_decrypting(input_user, fernet_key)
+    password_to_decrypt_decrypted_d = password_to_decrypt_decrypted.decode()
+
+    return password_to_decrypt_decrypted_d
+
+def password_to_encrypt(input_user):
+    password_fer = fernet_string_encrypting(input_user, fernet_key)
+    password_fer_encoded = password_fer.decode()
+
+    return password_fer_encoded
+
+def new_master_password(new_master):
+    new_master_hash = string_to_hash_func(new_master)
+
+    erase_file_new_content("masterpw.txt", new_master_hash)
+
 
 # This parent class is only created for readability of the other classes and
 # that they all are marked as commands.
@@ -65,13 +84,10 @@ class append(commands):
         self.password = input(
             "To what account should the password be linked?\n> "
         )
-        account_fer = fernet_string_encoding(self.account, fernet_key)
-        password_fer = fernet_string_encoding(self.password, fernet_key)
 
-        account_fer_encoded = account_fer.decode()
-        password_fer_encoded = password_fer.decode()
+        encrypted_password = password_to_encrypt(self.password)
 
-        new_pw_dict = {account_fer_encoded: password_fer_encoded}
+        new_pw_dict = {self.account: encrypted_password}
         text_file_dictionary.update(new_pw_dict)
 
         new_dict()
@@ -90,28 +106,27 @@ class get_pw(commands):
             "From which Account would you like to access the password?\n> "
         )
 
-        account_fer = fernet_string_encoding(self.account, fernet_key)
+        password_to_de = text_file_dictionary.get(self.account)
 
-        account_fer_encoded = account_fer.decode()
+        password_de = password_to_decrypt(password_de)
 
-        password_to_decrypt = text_file_dictionary.get(account_fer_encoded)
-
-        password_to_decrypt_decrypted = fernet_string_decoding(self.account, fernet_key)
-
-        print(password_to_decrypt_decrypted)
+        print(password_de)
 
     
 # This class erases the account and password of a by the user set account.
-class erase_pw(commands):
+class erase_acc_pw(commands):
 
     #Same precediure as with the get_pw
 
     def __init__(self):
-        self.account_to_erase = input(
-            """From what Account do you want to erase the"password and account?
-            > """)
+        self.account_to_erase = input("""
+            Which account and password would you like to erase? Pls put in the
+            accountname.\n> 
+            """)
         
-        text_file_dictionary.pop(account_to_erase)
+        account_erase = text_file_dictionary.get(self.account_to_erase)
+        
+        text_file_dictionary.pop(account_erase)
 
         new_dict()
 
@@ -119,19 +134,24 @@ class erase_pw(commands):
 # an account that is allready present in the dictionary. If the account is not
 # found in the dictionary the programms stops the process.
 class change_pw(commands):
-
-    ## Here I have to first encrypt the input. See if the encrypted is in the 
-    ## dict and then get the new one and encrypt that one.
+    ## Get the input from the user, erase the old one and set the new one that 
+    ## needs to be encypted.
 
     def __init__(self):
         self.account = input(
             "What is the Accountname you would like to append:\n> "
             )
+
         if self.account in text_file_dictionary:
             password = input(
                 "To what should the password be changed?\n> "
             )
-            new_pw_dict = {self.account: password}
+
+            ## here we need a function to encrypt the password
+
+            new_password = password_to_encrypt(password)
+
+            new_pw_dict = {self.account: new_password}
             text_file_dictionary.update(new_pw_dict)
 
             new_dict()
@@ -146,9 +166,19 @@ class erase_all_pws(commands):
     def __init__(self):
         self.sure = input("Are you sure you want to erase all passwords:\n> ")
         if self.sure == "yes":
-            text_file_dictionary.clear()
 
-            new_dict()
+            sure_sure = input("Are you certain?")
+
+            if sure_sure == "yes":
+                text_file_dictionary.clear()
+
+                new_dict()
+
+            else:
+                exit()
+        
+        else:
+            exit()
 
 
 # asks the user for the masterpassword in order to access the application.
@@ -176,7 +206,7 @@ if masterpassword_hash == master:
     # asks the user which action he would like to perfom.
     command = input("""
         What action would you like to perform?\n
-        Actions: append, get pw, erase pw, change pw, erase all pws,
+        Actions: append, get pw, erase acc and pw, change pw, erase all pws,
         change masterpassword\n> 
         """)
 
@@ -187,8 +217,8 @@ if masterpassword_hash == master:
     elif command == 'get pw':
         get_pw()
         
-    elif command == 'erase pw':
-        erase_pw()
+    elif command == 'erase acc and pw':
+        erase_acc_pw()
 
     elif command == 'change pw':
         change_pw()
@@ -206,10 +236,8 @@ if masterpassword_hash == master:
             new_master = input(
                 "What should be the new masterpassword be set to?\n>"
                 )
-            
-            new_master_hash = string_to_hash_func(new_master)
 
-            erase_file_new_content("masterpw.txt", new_master_hash)
+            new_master_password(new_master)
 
         else:
             exit()
