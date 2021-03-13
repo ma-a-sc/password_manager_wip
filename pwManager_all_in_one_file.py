@@ -108,7 +108,7 @@ class get_pw(commands):
 
         password_to_de = text_file_dictionary.get(self.account)
 
-        password_de = password_to_decrypt(password_de)
+        password_de = password_to_decrypt(password_to_de)
 
         print(password_de)
 
