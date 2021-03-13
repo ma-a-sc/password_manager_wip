@@ -1,7 +1,10 @@
 from sys import exit
+from sys import argv
 import json
 import hashlib
 from cryptography.fernet import Fernet
+
+script, filename = argv
 
 def new_master_password(new_master):
     new_master_hash = string_to_hash_func(new_master)
@@ -41,7 +44,7 @@ def new_dict():
 
 
 print("""
-    Thank you for using pwManager. First we need to set a Masterpassword
+    Thank you for using pwManager. First you need to set a Masterpassword
     and we need to generate a Fernet key. Fernet is the encryption method
     used for the passwords. 
     DO NOT PROGRESS FURTHER IF YOU ALLREADY DID THE SETUP ONCE!
@@ -62,9 +65,7 @@ if progress == "yes":
     print(f"You set your masterpassword as: {masterpassword}")
 
     fernet_key = Fernet.generate_key()
-
-
-
+    
     print(f"""
     Your Fernet key is: {fernet_key}\n Pls store it offline and not on the
     same pc as the passwordmanager itself. Security is compromised otherwise.
@@ -73,10 +74,15 @@ if progress == "yes":
     set_password = input("""
     Do you want to set some accounts and passwords?\nOptions: yes or no.\n>
     """)
+    with open(filename, 'w') as w:
+        w.write("{}")
+
+    with open(filename, 'r') as m:
+        contents = m.read()
+
+    text_file_dictionary = json.loads(contents)
 
     if set_password =="yes":
-
-        text_file_dictionary = {}
 
         con = True
 
@@ -89,6 +95,8 @@ if progress == "yes":
             new_pw_dict = {account: encrypted_password}
             text_file_dictionary.update(new_pw_dict)
 
+            new_dict()
+
             con_ = input("Do you want to add more?\n y or n\n>")
 
             if con_ == "y":
@@ -99,9 +107,6 @@ if progress == "yes":
             else:
                 print("Not a valid option.")
             
-
-
-    
     if set_password == "no":
         exit()
 
