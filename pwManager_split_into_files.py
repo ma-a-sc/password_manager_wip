@@ -1,10 +1,5 @@
 from sys import argv
 from sys import exit
-
-import sys
-
-sys.path.append("Users\Ma_a_sc\Documents\Python\Password_Manager_Development\password_manager_wip")
-
 import json
 import hashlib
 from cryptography.fernet import Fernet
@@ -40,19 +35,19 @@ if masterpassword_hash == master:
         """)
 
     if command == 'append':
-        append()
+        pwManager_c.append(fernet_key, text_file_dictionary)
     
     elif command == 'get pw':
-        get_pw()
+        pwManager_c.get_pw(fernet_key, text_file_dictionary)
         
     elif command == 'erase acc and pw':
-        erase_acc_pw()
+        pwManager_c.erase_acc_pw(text_file_dictionary)
 
     elif command == 'change pw':
-        change_pw()
+        pwManager_c.change_pw(fernet_key, text_file_dictionary)
 
     elif command == 'erase all pws':
-        erase_all_pws()
+        pwManager_c.erase_all_pws(text_file_dictionary)
 
     elif command == 'change masterpassword':
         change_verification = input("What is the masterpassword?\n> ")
