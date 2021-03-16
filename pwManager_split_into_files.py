@@ -20,14 +20,11 @@ with open("masterpw.txt") as v:
 if masterpassword_hash == master:
     fernet_key = input("Pls insert decoding key.\n>")
 
-    
     with open(file_pw, 'r') as m:
         contents = m.read()
 
-    
     text_file_dictionary = json.loads(contents)
 
-    
     command = input("""
         What action would you like to perform?\n
         Actions: append, get pw, erase acc and pw, change pw, erase all pws,
@@ -50,21 +47,8 @@ if masterpassword_hash == master:
         pwManager_c.erase_all_pws(text_file_dictionary, file_pw)
 
     elif command == 'change masterpassword':
-        change_verification = input("What is the masterpassword?\n> ")
-
-        change_secure2 = encryption_functions.string_to_hash_func(change_verification)
-
-        if change_secure2 == master:
-            
-            new_master = input(
-                "What should be the new masterpassword be set to?\n>"
-                )
-
-            dict_functions.new_master_password(new_master)
-
-        else:
-            exit()
-
+        pwManager_c.new_master_pw()
+        
     else:
         print("I don't know this command.")
         ex = input("Do you want to exit?")

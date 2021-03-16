@@ -56,9 +56,7 @@ class erase_acc_pw(commands):
             accountname.\n> 
             """)
         
-        account_erase = self.account_to_erase
-        
-        text_file_dictionary.pop(account_erase)
+        text_file_dictionary.pop(self.account_to_erase)
 
         dict_functions.new_dict(filename, text_file_dictionary)
 
@@ -106,5 +104,27 @@ class erase_all_pws(commands):
             else:
                 exit()
         
+        else:
+            exit()
+
+class new_master_pw(commands):
+
+    def __init__(self):
+
+        self.change_verification = input("What is the masterpassword?\n> ")
+
+        with open("masterpw.txt") as v:
+            master = v.read()
+
+        change_secure2 = encryption_functions.string_to_hash_func(self.change_verification)
+
+        if change_secure2 == master:
+            
+            new_master = input(
+                "What should be the new masterpassword be set to?\n>"
+                )
+
+            dict_functions.new_master_password(new_master)
+
         else:
             exit()
