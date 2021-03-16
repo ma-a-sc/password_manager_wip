@@ -5,6 +5,9 @@ import pwManager_c
 import dict_functions
 import encryption_functions
 
+script, filename = argv
+
+file_pw = filename
 
 def user_inputs():
     while con == True:
@@ -49,11 +52,6 @@ def user_inputs():
                 print("Invalid, will exit now")
                 exit()
 
-
-
-script, filename = argv
-
-file_pw = filename
 
 verification = input("What is the masterpassword?\n> ")
 

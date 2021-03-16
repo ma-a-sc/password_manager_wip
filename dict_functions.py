@@ -3,7 +3,7 @@ import encryption_functions
 
 def new_dict(filename, text_file_dictionary):
     with open(filename, 'w') as file:
-        file.write(json.dumps(text_file_dictionary))
+        file.write(json.dumps(text_file_dictionary, indent = 2))
 
 def erase_file_new_content(file_to_change, new_content):
     with open(file_to_change, 'w') as file_to_c:

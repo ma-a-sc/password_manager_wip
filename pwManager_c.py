@@ -28,7 +28,6 @@ class append(commands):
 
         dict_functions.new_dict(filename, text_file_dictionary)
 
-        exit()
 
 #searches the dictionary for a key and decrypts the value.
 class get_pw(commands):
