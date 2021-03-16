@@ -1,16 +1,18 @@
 import dict_functions
 import encryption_functions
 
+# dummy class makes it easier to identify the other classes as commands.
 class commands(object):
 
     def __init__(self):
         pass
     pass
 
+# adds a new key value pair to the dictionary
 class append(commands):
 
 
-    def __init__(self, fernet_key, text_file_dictionary):
+    def __init__(self, fernet_key, text_file_dictionary, filename):
         self.account = input(
             "What is the Accountname you would like to append:\n> "
         )
@@ -24,10 +26,11 @@ class append(commands):
         new_pw_dict = {self.account: encrypted_password}
         text_file_dictionary.update(new_pw_dict)
 
-        dict_functions.new_dict()
+        dict_functions.new_dict(filename, text_file_dictionary)
 
         exit()
 
+#searches the dictionary for a key and decrypts the value.
 class get_pw(commands):
 
     def __init__(self, fernet_key, text_file_dictionary):
@@ -43,25 +46,27 @@ class get_pw(commands):
 
         print(password_de)
 
-    
+# erases the account and password that is given by the user.   
 class erase_acc_pw(commands):
 
 
-    def __init__(self, text_file_dictionary):
+    def __init__(self, text_file_dictionary, filename):
         self.account_to_erase = input("""
             Which account and password would you like to erase? Pls put in the
             accountname.\n> 
             """)
         
-        account_erase = text_file_dictionary.get(self.account_to_erase)
+        account_erase = self.account_to_erase
         
         text_file_dictionary.pop(account_erase)
 
-        dict_functions.new_dict()
+        dict_functions.new_dict(filename, text_file_dictionary)
 
+# changes the password for an account that is defined by the user. I still have
+# to add catches.
 class change_pw(commands):
 
-    def __init__(self, fernet_key, text_file_dictionary):
+    def __init__(self, fernet_key, text_file_dictionary, filename):
         self.account = input(
             "What is the Accountname you would like to append:\n> "
             )
@@ -73,21 +78,21 @@ class change_pw(commands):
                 "To what should the password be changed?\n> "
             )
 
-
             new_password = encryption_functions.password_to_encrypt(password, self.fernet_key)
 
             new_pw_dict = {self.account: new_password}
             text_file_dictionary.update(new_pw_dict)
 
-            dict_functions.new_dict()
+            dict_functions.new_dict(filename, text_file_dictionary)
         
         else:
             print("Acount does not exits.")
             exit()
 
+# clears out the dictionary
 class erase_all_pws(commands):
 
-    def __init__(self, text_file_dictionary):
+    def __init__(self, text_file_dictionary, filename):
         self.sure = input("Are you sure you want to erase all passwords:\n> ")
         if self.sure == "yes":
 
@@ -96,7 +101,7 @@ class erase_all_pws(commands):
             if sure_sure == "yes":
                 text_file_dictionary.clear()
 
-                dict_functions.new_dict()
+                dict_functions.new_dict(filename, text_file_dictionary)
 
             else:
                 exit()

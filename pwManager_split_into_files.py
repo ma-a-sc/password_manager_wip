@@ -1,14 +1,14 @@
 from sys import argv
 from sys import exit
 import json
-import hashlib
-from cryptography.fernet import Fernet
 import pwManager_c
 import dict_functions
 import encryption_functions
 
 
 script, filename = argv
+
+file_pw = filename
 
 verification = input("What is the masterpassword?\n> ")
 
@@ -21,7 +21,7 @@ if masterpassword_hash == master:
     fernet_key = input("Pls insert decoding key.\n>")
 
     
-    with open(filename, 'r') as m:
+    with open(file_pw, 'r') as m:
         contents = m.read()
 
     
@@ -35,19 +35,19 @@ if masterpassword_hash == master:
         """)
 
     if command == 'append':
-        pwManager_c.append(fernet_key, text_file_dictionary)
+        pwManager_c.append(fernet_key, text_file_dictionary, file_pw)
     
     elif command == 'get pw':
         pwManager_c.get_pw(fernet_key, text_file_dictionary)
         
     elif command == 'erase acc and pw':
-        pwManager_c.erase_acc_pw(text_file_dictionary)
+        pwManager_c.erase_acc_pw(text_file_dictionary, file_pw)
 
     elif command == 'change pw':
-        pwManager_c.change_pw(fernet_key, text_file_dictionary)
+        pwManager_c.change_pw(fernet_key, text_file_dictionary, file_pw)
 
     elif command == 'erase all pws':
-        pwManager_c.erase_all_pws(text_file_dictionary)
+        pwManager_c.erase_all_pws(text_file_dictionary, file_pw)
 
     elif command == 'change masterpassword':
         change_verification = input("What is the masterpassword?\n> ")
