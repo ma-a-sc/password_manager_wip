@@ -1,56 +1,53 @@
-from sys import argv
 from sys import exit
 import json
 import pwManager_c
 import dict_functions
 import encryption_functions
 
-script, filename = argv
-
-file_pw = filename
-
 def user_inputs():
-    while con == True:
-        command = input("""
-        What action would you like to perform?\n
-        Actions: append, get pw, erase acc and pw, change pw, erase all pws,
-        change masterpassword\n> 
-        """)
+    command = input("""
+    What action would you like to perform?\n
+    Actions: append, get pw, erase acc and pw, change pw, erase all pws,
+    change masterpassword, exit\n> 
+    """)
 
-        if command == 'append':
-            pwManager_c.append(fernet_key, text_file_dictionary, file_pw)
-            user_inputs()
+    if command == 'append':
+        pwManager_c.append(fernet_key, text_file_dictionary)
+        user_inputs()
     
-        elif command == 'get pw':
-            pwManager_c.get_pw(fernet_key, text_file_dictionary)
-            user_inputs()
+    elif command == 'get pw':
+        pwManager_c.get_pw(fernet_key, text_file_dictionary)
+        user_inputs()
         
-        elif command == 'erase acc and pw':
-            pwManager_c.erase_acc_pw(text_file_dictionary, file_pw)
-            user_inputs()
+    elif command == 'erase acc and pw':
+        pwManager_c.erase_acc_pw(text_file_dictionary)
+        user_inputs()
 
-        elif command == 'change pw':
-            pwManager_c.change_pw(fernet_key, text_file_dictionary, file_pw)
-            user_inputs()
+    elif command == 'change pw':
+        pwManager_c.change_pw(fernet_key, text_file_dictionary)
+        user_inputs()
 
-        elif command == 'erase all pws':
-            pwManager_c.erase_all_pws(text_file_dictionary, file_pw)
-            user_inputs()
+    elif command == 'erase all pws':
+        pwManager_c.erase_all_pws(text_file_dictionary)
+        user_inputs()
 
-        elif command == 'change masterpassword':
-            pwManager_c.new_master_pw()
-            user_inputs()
+    elif command == 'change masterpassword':
+        pwManager_c.new_master_pw()
+        user_inputs()
+
+    elif command == 'exit':
+        exit()
         
+    else:
+        print("I don't know this command.")
+        ex = input("Do you want to exit?\nyes or no\n>")
+        if ex == "yes":
+            exit()
+        elif ex == "no":
+            user_inputs()
         else:
-            print("I don't know this command.")
-            ex = input("Do you want to exit?\nyes or no\n>")
-            if ex == "yes":
-                exit()
-            elif ex == "no":
-                user_inputs()
-            else:
-                print("Invalid, will exit now")
-                exit()
+            print("Invalid, will exit now")
+            exit()
 
 
 verification = input("What is the masterpassword?\n> ")
@@ -67,8 +64,6 @@ if masterpassword_hash == master:
         contents = m.read()
 
     text_file_dictionary = json.loads(contents)
-
-    con = True
 
     user_inputs()
 

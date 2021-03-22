@@ -12,7 +12,7 @@ class commands(object):
 class append(commands):
 
 
-    def __init__(self, fernet_key, text_file_dictionary, filename):
+    def __init__(self, fernet_key, text_file_dictionary):
         self.account = input(
             "What is the Accountname you would like to append:\n> "
         )
@@ -26,7 +26,7 @@ class append(commands):
         new_pw_dict = {self.account: encrypted_password}
         text_file_dictionary.update(new_pw_dict)
 
-        dict_functions.new_dict(filename, text_file_dictionary)
+        dict_functions.new_dict("pw.txt", text_file_dictionary)
 
 
 #searches the dictionary for a key and decrypts the value.
@@ -49,7 +49,7 @@ class get_pw(commands):
 class erase_acc_pw(commands):
 
 
-    def __init__(self, text_file_dictionary, filename):
+    def __init__(self, text_file_dictionary):
         self.account_to_erase = input("""
             Which account and password would you like to erase? Pls put in the
             accountname.\n> 
@@ -57,13 +57,13 @@ class erase_acc_pw(commands):
         
         text_file_dictionary.pop(self.account_to_erase)
 
-        dict_functions.new_dict(filename, text_file_dictionary)
+        dict_functions.new_dict("pw.txt", text_file_dictionary)
 
 # changes the password for an account that is defined by the user. I still have
 # to add catches.
 class change_pw(commands):
 
-    def __init__(self, fernet_key, text_file_dictionary, filename):
+    def __init__(self, fernet_key, text_file_dictionary):
         self.account = input(
             "What is the Accountname you would like to append:\n> "
             )
@@ -80,7 +80,7 @@ class change_pw(commands):
             new_pw_dict = {self.account: new_password}
             text_file_dictionary.update(new_pw_dict)
 
-            dict_functions.new_dict(filename, text_file_dictionary)
+            dict_functions.new_dict("pw.txt", text_file_dictionary)
         
         else:
             print("Acount does not exits.")
@@ -89,7 +89,7 @@ class change_pw(commands):
 # clears out the dictionary
 class erase_all_pws(commands):
 
-    def __init__(self, text_file_dictionary, filename):
+    def __init__(self, text_file_dictionary):
         self.sure = input("Are you sure you want to erase all passwords:\n> ")
         if self.sure == "yes":
 
@@ -98,7 +98,7 @@ class erase_all_pws(commands):
             if sure_sure == "yes":
                 text_file_dictionary.clear()
 
-                dict_functions.new_dict(filename, text_file_dictionary)
+                dict_functions.new_dict("pw.txt", text_file_dictionary)
 
             else:
                 exit()

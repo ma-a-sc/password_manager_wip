@@ -1,46 +1,16 @@
 from sys import exit
-from sys import argv
 import json
-import hashlib
-from cryptography.fernet import Fernet
+import dict_functions
+import encryption_functions
 
-script, filename = argv
 
-def new_master_password(new_master):
-    new_master_hash = string_to_hash_func(new_master)
+## ATTTENTION: have to earase the argvs and to set the static files in the code.
+## This approach is better because it requieres less from the user and the 
+## he/she can do less wrong.
 
-    erase_file_new_content("masterpw.txt", new_master_hash)
+pw_file = open("pw.txt", "w+")
 
-def string_to_hash_func(string_to_hash):
-    string_encoded = string_to_hash.encode()
-
-    hash_container = hashlib.sha256()
-    hash_container.update(string_encoded)
-    hashed_string = hash_container.hexdigest()
-
-    return hashed_string
-
-def erase_file_new_content(file_to_change, new_content):
-    with open(file_to_change, 'w') as file_to_c:
-        file_to_c.write(new_content)
-
-def password_to_encrypt(input_user):
-    password_fer = fernet_string_encrypting(input_user, fernet_key)
-    password_fer_encoded = password_fer.decode()
-
-    return password_fer_encoded
-
-def fernet_string_encrypting(string_to_encrypt, fernet_key):
-
-    f = Fernet(fernet_key)
-    string_to_encrypt_b = string_to_encrypt.encode()
-    token = f.encrypt(string_to_encrypt_b)
-
-    return token
-
-def new_dict():
-    with open(filename, 'w') as file:
-        file.write(json.dumps(text_file_dictionary))
+master_file = open("masterpw.txt", "w+")
 
 
 print("""
@@ -74,10 +44,10 @@ if progress == "yes":
     set_password = input("""
     Do you want to set some accounts and passwords?\nOptions: yes or no.\n>
     """)
-    with open(filename, 'w') as w:
+    with open("pw.txt", 'w') as w:
         w.write("{}")
 
-    with open(filename, 'r') as m:
+    with open("pw.txt", 'r') as m:
         contents = m.read()
 
     text_file_dictionary = json.loads(contents)
@@ -97,12 +67,12 @@ if progress == "yes":
 
             new_dict()
 
-            con_ = input("Do you want to add more?\n y or n\n>")
+            con_ = input("Do you want to add more?\n yes or no\n>")
 
-            if con_ == "y":
+            if con_ == "yes":
                 continue
         
-            elif con_ == "n":
+            elif con_ == "no":
                 break
             else:
                 print("Not a valid option.")

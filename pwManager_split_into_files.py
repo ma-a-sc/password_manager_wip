@@ -1,14 +1,8 @@
-from sys import argv
 from sys import exit
 import json
 import pwManager_c
 import dict_functions
 import encryption_functions
-
-
-script, filename = argv
-
-file_pw = filename
 
 verification = input("What is the masterpassword?\n> ")
 
@@ -32,19 +26,19 @@ if masterpassword_hash == master:
         """)
 
     if command == 'append':
-        pwManager_c.append(fernet_key, text_file_dictionary, file_pw)
+        pwManager_c.append(fernet_key, text_file_dictionary)
     
     elif command == 'get pw':
         pwManager_c.get_pw(fernet_key, text_file_dictionary)
         
     elif command == 'erase acc and pw':
-        pwManager_c.erase_acc_pw(text_file_dictionary, file_pw)
+        pwManager_c.erase_acc_pw(text_file_dictionary)
 
     elif command == 'change pw':
-        pwManager_c.change_pw(fernet_key, text_file_dictionary, file_pw)
+        pwManager_c.change_pw(fernet_key, text_file_dictionary)
 
     elif command == 'erase all pws':
-        pwManager_c.erase_all_pws(text_file_dictionary, file_pw)
+        pwManager_c.erase_all_pws(text_file_dictionary)
 
     elif command == 'change masterpassword':
         pwManager_c.new_master_pw()

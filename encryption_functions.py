@@ -32,7 +32,8 @@ def fernet_string_decrypting(string_to_decrypt, fernet_key):
 
     return decrypted_string
 
-### I use decode in both of the functions. I have to changed that I think.
+### The decode function is needed because the fernet code only returns bytes and 
+### these have to be decoded in order to be read as strings.
 
 def password_to_decrypt(input_user, fernet_key):
     password_to_decrypt_decrypted = fernet_string_decrypting(input_user, fernet_key)
