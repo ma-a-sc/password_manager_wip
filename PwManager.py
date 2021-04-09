@@ -9,47 +9,47 @@ import encryption_functions
 # after the command was performed.
 def user_inputs(fernet_key, text_file_dictionary):
     command = input("""
-What action would you like to perform?
+\nWhat action would you like to perform?
 Actions: append, get pw, erase acc and pw, change pw, erase all pws,
 change masterpassword, exit
 >""")
 
     if command == 'append':
-        pwManager_c.append(fernet_key, text_file_dictionary)
+        pwManager_c.append_pw(fernet_key, text_file_dictionary)
         user_inputs(fernet_key, text_file_dictionary)
     
     elif command == 'get pw':
-        pwManager_c.get_pw(fernet_key, text_file_dictionary)
+        pwManager_c.get_pw_(fernet_key, text_file_dictionary)
         user_inputs(fernet_key, text_file_dictionary)
         
     elif command == 'erase acc and pw':
-        pwManager_c.erase_acc_pw(text_file_dictionary)
+        pwManager_c.erase_acc_pw_(text_file_dictionary)
         user_inputs(fernet_key, text_file_dictionary)
 
     elif command == 'change pw':
-        pwManager_c.change_pw(fernet_key, text_file_dictionary)
+        pwManager_c.change_pw_(fernet_key, text_file_dictionary)
         user_inputs(fernet_key, text_file_dictionary)
 
     elif command == 'erase all pws':
-        pwManager_c.erase_all_pws(text_file_dictionary)
+        pwManager_c.erase_all_pws_(text_file_dictionary)
         user_inputs(fernet_key, text_file_dictionary)
 
     elif command == 'change masterpassword':
-        pwManager_c.new_master_pw()
+        pwManager_c.new_master_pw_()
         user_inputs(fernet_key, text_file_dictionary)
 
     elif command == 'exit':
         exit()
         
     else:
-        print("I don't know this command.")
+        print("\nI don't know this command.")
         ex = input("Do you want to exit?\nyes or no\n>")
         if ex == "yes":
             exit()
         elif ex == "no":
             user_inputs(fernet_key, text_file_dictionary)
         else:
-            print("Invalid, will exit now")
+            print("\nInvalid, will exit now")
             exit()
 
 def verification():
@@ -57,7 +57,7 @@ def verification():
     attempts_to_log_in = 0 
 
     if attempts_to_log_in <= 2:
-        verification = input("What is the masterpassword?\n> ")
+        verification = input("What is the masterpassword?\n\n>")
         masterpassword_hash = encryption_functions.string_to_hash_func(verification)
 
         # Opens the file in which the hash for the current master password is stored 
@@ -69,7 +69,7 @@ def verification():
         # the same. If that is not the case the programm will exit.
         if masterpassword_hash == master:
             # asks the user for the in the setup.py file generated key.
-            fernet_key = input("Pls insert decoding key.\n>")
+            fernet_key = input("Pls insert decoding key.\n\n>")
             # Opens the file where the accounts and encrypted passwords are 
             # stored and loads them into the variable contents.
             with open("pw.txt", 'r') as m:
@@ -84,7 +84,7 @@ def verification():
             attempts_to_log_in += 1
 
     elif attempts_to_log_in > 2:
-        print("Failed to log in.")
+        print("\nFailed to log in.")
         exit()
 
 verification()
