@@ -1,10 +1,7 @@
 import hashlib
 from cryptography.fernet import Fernet
 
-### Fernet can encrypt more than only strings. I have to change the comments and
-### variables.
-
-# creates the hash to a string. sha256 algo
+# Generates a hash (sha256 algo) out of the given argument.
 def string_to_hash_func(string_to_hash):
     string_encoded = string_to_hash.encode()
 
@@ -14,35 +11,38 @@ def string_to_hash_func(string_to_hash):
 
     return hashed_string
 
-# runs a string string through Fernet to encrypt it.
-def fernet_string_encrypting(string_to_encrypt, fernet_key):
+# Ecrypts the first arguments using the second argument as the key.
+def fernet_encrypting(information_to_encrypt, fernet_key):
 
     f = Fernet(fernet_key)
-    string_to_encrypt_b = string_to_encrypt.encode()
-    encrypted_string = f.encrypt(string_to_encrypt_b)
+    information_to_encrypt_b = information_to_encrypt.encode()
+    encrypted_information = f.encrypt(information_to_encrypt_b)
 
-    return encrypted_string
+    return encrypted_information
 
-# decrypts the code with fernet.
-def fernet_string_decrypting(string_to_decrypt, fernet_key):
+# Decrypts the first arguments using the second argument as the key.
+def fernet_decrypting(information_to_decrypt, fernet_key):
 
     f = Fernet(fernet_key)
-    string_to_decrypt_b = string_to_decrypt.encode()
-    decrypted_string = f.decrypt(string_to_decrypt_b)
+    information_to_decrypt_b = information_to_decrypt.encode()
+    decrypted_information = f.decrypt(information_to_decrypt_b)
 
-    return decrypted_string
+    return decrypted_information
 
-### The decode function is needed because the fernet code only returns bytes and 
-### these have to be decoded in order to be read as strings.
+### FErnet only works while passing bytes therefore the passed input from the 
+### user has either to be decoded or encoded.
 
-def password_to_decrypt(input_user, fernet_key):
-    password_to_decrypt_decrypted = fernet_string_decrypting(input_user, fernet_key)
-    password_to_decrypt_decrypted_d = password_to_decrypt_decrypted.decode()
+# Decodes the password from the database. Calls first the above writeen 
+# decrypting function and then decodes the bytes into a regular format.
+def input_to_decrypt(input_ , fernet_key):
+    input_to_decrypt_decrypted = fernet_decrypting(input_ , fernet_key)
+    input_to_decrypt_decrypted_d = input_to_decrypt_decrypted.decode()
 
-    return password_to_decrypt_decrypted_d
+    return input_to_decrypt_decrypted_d
+# Encodes the input from the user. And then decodes the bytes back into a string
+# so that it can be written into the dictionary.
+def input_to_encrypt(input_ , fernet_key):
+    input_fer = fernet_encrypting(input_ , fernet_key)
+    input_fer_encoded = input_fer.decode()
 
-def password_to_encrypt(input_user, fernet_key):
-    password_fer = fernet_string_encrypting(input_user, fernet_key)
-    password_fer_encoded = password_fer.decode()
-
-    return password_fer_encoded
+    return input_fer_encoded
